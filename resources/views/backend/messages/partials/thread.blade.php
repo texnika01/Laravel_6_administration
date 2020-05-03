@@ -1,17 +1,14 @@
-
 {!! $class = $thread->isUnread(Auth::id()) ? 'alert-info' : ''; !!}
+<tr>
 
-<div class="media alert {{ $class }}">
-    <h4 class="media-heading">
-        <a href="{{ route('messages.show', $thread->id) }}">{{ $thread->subject }}</a>
-        ({{ $thread->userUnreadMessagesCount(Auth::id()) }} unread)</h4>
-    <p>
-        {{ $thread->latestMessage->body }}
-    </p>
-    <p>
-        <small><strong>Creator:</strong> {{ $thread->creator()->name }}</small>
-    </p>
-    <p>
-        <small><strong>Participants:</strong> {{ $thread->participantsString(Auth::id()) }}</small>
-    </p>
-</div>
+<td> {{ $thread->creator()->first_name }}</td>
+<td>{{ $thread->participantsString(Auth::id(),['first_name','last_name']) }}</td>
+<td> <a href="{{ route('admin.messages.show', $thread->id) }}">{{ $thread->subject }}</a></td>
+<td>
+    <a href="{{ route('admin.messages.show', $thread->id) }}">
+    {{ $thread->latestMessage->body }}
+    </a>
+</td>
+<td>2012/02/01</td>
+<td><span class="badge badge-success">Active</span></td>
+</tr>

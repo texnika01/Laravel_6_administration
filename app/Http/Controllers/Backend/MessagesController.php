@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Backend\MessagesRequest;
 use App\Models\Auth\User;
-use Auth;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
 use Cmgmyr\Messenger\Models\Thread;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class MessagesController extends Controller
 {
@@ -30,7 +33,7 @@ class MessagesController extends Controller
         // All threads that user is participating in, with new messages
         // $threads = Thread::forUserWithNewMessages(Auth::id())->latest('updated_at')->get();
 
-        return view('messages.index', compact('threads'));
+        return view('backend.messages.index',compact('threads'));
     }
 
     /**
@@ -46,7 +49,7 @@ class MessagesController extends Controller
         } catch (ModelNotFoundException $e) {
             Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
 
-            return redirect()->route('messages');
+            return redirect()->route('admin.messages');
         }
 
         // show current user in list if not a current participant
@@ -58,7 +61,7 @@ class MessagesController extends Controller
 
         $thread->markAsRead($userId);
 
-        return view('messages.show', compact('thread', 'users'));
+        return view('backend.messages.show', compact('thread', 'users'));
     }
 
     /**
@@ -70,7 +73,7 @@ class MessagesController extends Controller
     {
         $users = User::where('id', '!=', Auth::id())->get();
 
-        return view('messages.create', compact('users'));
+        return view('backend.messages.create', compact('users'));
     }
 
     /**
@@ -78,34 +81,39 @@ class MessagesController extends Controller
      *
      * @return mixed
      */
-    public function store()
+    public function store(MessagesRequest $request)
     {
-        $input = Request::all();
-
-        $thread = Thread::create([
-            'subject' => $input['subject'],
+        $validator = Validator::make($request->all(),[
+            'subject' => 'required|min:6|max:60',
+            'message' => 'required|min:6|max:255',
+            'recipients' => 'required',
         ]);
+        if ($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }else{
+            $thread = Thread::create([
+                'subject' => $request->input('subject'),
+            ]);
+            // Message
+            Message::create([
+                'thread_id' => $thread->id,
+                'user_id' => Auth::id(),
+                'body' => $request->input('message'),
+            ]);
 
-        // Message
-        Message::create([
-            'thread_id' => $thread->id,
-            'user_id' => Auth::id(),
-            'body' => $input['message'],
-        ]);
-
-        // Sender
-        Participant::create([
-            'thread_id' => $thread->id,
-            'user_id' => Auth::id(),
-            'last_read' => new Carbon,
-        ]);
-
-        // Recipients
-        if (Request::has('recipients')) {
-            $thread->addParticipant($input['recipients']);
+            // Sender
+            Participant::create([
+                'thread_id' => $thread->id,
+                'user_id' => Auth::id(),
+                'last_read' => new Carbon,
+            ]);
+            // Recipients
+            if ($request->has('recipients')) {
+                $thread->addParticipant( $request->input('recipients'));
+            }
         }
 
-        return redirect()->route('messages');
+        return redirect()->route('admin.messages')->withFlashSuccess('Send Success');
     }
 
     /**

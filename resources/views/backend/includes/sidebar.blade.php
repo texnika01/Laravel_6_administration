@@ -59,7 +59,7 @@
                 <li class="nav-item nav-dropdown {{
                     active_class(Route::is('admin/log-viewer*'), 'open')
                 }}">
-                        <a class="nav-link nav-dropdown-toggle {{
+                    <a class="nav-link nav-dropdown-toggle {{
                             active_class(Route::is('admin/log-viewer*'))
                         }}" href="#">
                         <i class="nav-icon fas fa-list"></i> @lang('menus.backend.log-viewer.main')
@@ -82,6 +82,28 @@
                         </li>
                     </ul>
                 </li>
+                <!-- messages menu -->
+                <li class="divider"></li>
+                <li class="nav-item nav-dropdown {{active_class(Route::is('admin/messages*')) }}">
+                    <a class="nav-link nav-dropdown-toggle {{ active_class(Route::is('admin/messages*')) }}" href="#">
+                        <i class="nav-icon fas fa-list"></i>Messages
+                    </a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link {{ active_class(Route::is('admin/messages')) }}"
+                               href="{{ route('admin.messages') }}">
+                                Vew All
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ active_class(Route::is('admin/messages/create*')) }}"
+                               href="{{ route('admin.messages.create') }}">
+                                Create new
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- end messages menu -->
             @endif
         </ul>
     </nav>

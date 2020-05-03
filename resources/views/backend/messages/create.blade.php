@@ -1,38 +1,29 @@
-@extends('')
-
-@section()
+@extends('backend.layouts.app')
 
 @section('content')
-    <h1>Create a new message</h1>
-    <form action="{{ route('messages.store') }}" method="post">
-        {{ csrf_field() }}
-        <div class="col-md-6">
-            <!-- Subject Form Input -->
-            <div class="form-group">
-                <label class="control-label">Subject</label>
-                <input type="text" class="form-control" name="subject" placeholder="Subject"
-                       value="{{ old('subject') }}">
-            </div>
 
-            <!-- Message Form Input -->
-            <div class="form-group">
-                <label class="control-label">Message</label>
-                <textarea name="message" class="form-control">{{ old('message') }}</textarea>
-            </div>
+    <!-- start form send messages -->
+    <div class="card c-email-app">
+        <div class="card-header">
+            <strong>Create new messages</strong>
+        </div><!--card-header-->
+        <div class="card-body">
 
-            @if($users->count() > 0)
-                <div class="checkbox">
-                    @foreach($users as $user)
-                        <label title="{{ $user->name }}"><input type="checkbox" name="recipients[]"
-                                                                value="{{ $user->id }}">{!!$user->name!!}</label>
-                    @endforeach
+        <!-- start form -->
+        {!! Form::open(['route' => 'admin.messages.store', 'method' => 'post']) !!}
+
+            @include('backend.messages._form')
+        <!-- button groupe -->
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button type="submit" class="btn btn-default" href="#"> Cancel </button>
+                    <button type="submit" class="btn btn-primary"> Submit</button>
                 </div>
-        @endif
-
-        <!-- Submit Form Input -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary form-control">Submit</button>
             </div>
+            <!-- end button groupe -->
+        {!! Form::close() !!}
+        <!-- end form -->
         </div>
-    </form>
+    </div>
+    <!-- end form send messages -->
 @endsection

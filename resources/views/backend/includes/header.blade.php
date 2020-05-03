@@ -38,27 +38,11 @@
         </li>
         <!---- start messages   ---->
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link"  href="{{route('admin.messages')}}" role="button" aria-haspopup="true" aria-expanded="false">
                 <i class="far fa-envelope"></i>
                 <span class="badge badge-pill badge-danger">@include('backend.messages.unread-count')</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg pt-0">
-                <div class="dropdown-header bg-light">
-                    <strong>You have @include('backend.messages.unread-count') notifications</strong>
-                </div>
 
-                <a class="dropdown-item d-block" href="#">
-                    <div class="text-uppercase mb-1"><small><b>Memory Usage</b></small></div><span class="progress progress-xs">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                    </span><small class="text-muted">11444GB/16384MB</small>
-                </a>
-                <a class="dropdown-item d-block" href="#">
-                    <div class="text-uppercase mb-1"><small><b>SSD 1 Usage</b></small></div>
-                    <span class="progress progress-xs">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                    </span><small class="text-muted">243GB/256GB</small>
-                </a>
-            </div>
         </li>
         <!----  end messages   ---->
         <li class="nav-item d-md-down-none">
